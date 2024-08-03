@@ -1,0 +1,11 @@
+[build]
+  command = "pnpm install && pnpm build"
+  publish = "build"
+
+[build.environment]
+  NODE_VERSION = "20.13.1"
+  NPM_VERSION = "8.15.8"
+  
+[build]
+  command = "pnpm install --no-frozen-lockfile && pnpm build"
+  publish = "build"
