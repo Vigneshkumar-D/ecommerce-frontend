@@ -1,132 +1,281 @@
-# NxtTrendz-App
 
-Welcome to the E-Commerce Website project, an online shopping platform built with a variety of technologies and featuring essential functionalities, including authentication and authorization, product listing with filters, shopping cart, and checkout. This README file will guide you through the setup, features, and technologies used in this project.
+# E-commerce Frontend
+
+This repository contains the frontend code for an e-commerce platform built using React, Stripe for payment integration, and deployed on Netlify.
 
 ## Table of Contents
 
-- [Introduction](#introduction)
-- [Features](#features)
-  - [Authentication and Authorization](#authentication-and-authorization)
-  - [Product Listing](#product-listing)
-  - [Filters](#filters)
-  - [Shopping Cart](#shopping-cart)
-  - [Checkout](#checkout)
-- [Technologies Used](#technologies-used)
-- [Getting Started](#getting-started)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Running the Project](#running-the-project)
+- [Deployment](#deployment)
+- [Project Structure](#project-structure)
 - [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
-- [Acknowledgments](#acknowledgments)
 
-## Introduction
+## Prerequisites
 
-The E-Commerce Website is a full-fledged online shopping platform designed to provide users with an immersive shopping experience. This project combines various technologies and features to create a functional and user-friendly e-commerce site.
+- Node.js v20.13.1
+- pnpm (Package Manager)
 
-## Features
+## Installation
 
-### Authentication and Authorization
-
-- **User Login**: Registered users can log in using their email and password.
-- **JWT Token**: Authentication is handled using JSON Web Tokens (JWT) to securely manage user sessions.
-- **Authorization**: Certain functionalities are restricted to authenticated users, such as adding items to the shopping cart and proceeding to checkout.
-
-### Product Listing
-
-- **Display Products**: Display a wide range of products with essential information, including images, product names, prices, and "Add to Cart" buttons.
-- **Category and Rating Filters**: Users can filter products by category and sort them by ratings.
-
-### Filters
-
-- **Category Filter**: Users can select specific product categories to narrow down their search.
-- **Rating Filter**: Users can sort products by ratings to find the highest-rated items.
-
-### Shopping Cart
-
-- **Add and Remove Items**: Users can add products to their shopping cart and remove items as needed.
-- **Quantity Control**: Users can increase or decrease the quantity of items in their cart.
-- **Real-time Updates**: The cart's total cost and item count are updated in real-time as users interact with it.
-
-### Checkout
-
-- **Total Cost Calculation**: Calculate the total cost of items in the cart during the checkout process.
-- **Shipping Information**: Users can provide shipping details, including address and payment information.
-- **Order Confirmation**: Provide an order confirmation page for users to review their order before finalizing the purchase.
-
-## Technologies Used
-
-This project is built using the following technologies:
-
-- Front-end:
-  - React JS
-  - JavaScript (ES6+)
-  - CSS
-  - Bootstrap for styling
-  - React Router for routing
-  - REST API calls to interact with the server
-  - Local Storage for cart management
-  - JWT Token for user authentication
-
-- Back-end:
-  - Node.js
-  - Express.js for creating RESTful APIs
-  - SQLite for database storage
-
-## Getting Started
-
-Follow these steps to set up and run the project locally:
-
-1. Clone the project repository to your local machine:
+1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/yourusername/e-commerce-website.git
+   git clone https://github.com/Vigneshkumar-D/ecommerce-frontend.git
+   cd ecommerce-frontend
    ```
 
-2. Navigate to the project directory:
+2. **Install dependencies:**
 
    ```bash
-   cd e-commerce-website
+   pnpm install --no-frozen-lockfile
    ```
 
-3. Install project dependencies:
+## Running the Project
 
-   ```bash
-   npm install
+To start the development server:
+
+```bash
+pnpm start
+```
+
+The application will be available at `http://localhost:3000`.
+
+## Deployment
+
+This project is set up for deployment on Netlify. Follow these steps to deploy:
+
+1. **Create a `netlify.toml` file** in the root of your project with the following content:
+
+   ```toml
+   [build]
+   command = "pnpm install --no-frozen-lockfile && pnpm build"
+   publish = "build"
+   
+   [build.environment]
+   NODE_VERSION = "20.13.1"
    ```
 
-4. Start the development server:
+2. **Connect your repository to Netlify** and follow the deployment steps on the Netlify dashboard.
 
-   ```bash
-   npm start
-   ```
+3. If you encounter issues with dependencies, ensure your `pnpm` version matches the one specified in the `netlify.toml` file.
 
-5. Open your web browser and visit `http://localhost:3000` to view the project.
+## Project Structure
+
+```
+ecommerce-frontend/
+├── public/
+│   ├── index.html
+│   └── ...
+├── src/
+│   ├── components/
+│   │   ├── Payments/
+│   │   │   ├── CheckoutForm.jsx
+│   │   │   ├── index.css
+│   │   │   └── Payments.jsx
+│   │   ├── ProductCard/
+│   │   │   ├── index.jsx
+│   │   │   └── ...
+│   ├── App.jsx
+│   ├── index.css
+│   ├── index.js
+│   └── ...
+├── .gitignore
+├── netlify.toml
+├── package.json
+├── pnpm-lock.yaml
+└── README.md
+```
 
 ## Usage
 
-Once the project is set up, users can:
+### Payments Integration
 
-- Register for an account or log in.
-- Browse the product listings, filter products by category and rating.
-- Add products to their shopping cart and adjust quantities.
-- Proceed to checkout, enter shipping details, and complete the purchase.
+This project includes integration with Stripe for handling payments. The `Payments` component provides options for various payment methods including credit/debit cards and digital wallets like Google Pay and Apple Pay.
+
+#### Example Usage
+
+```jsx
+import React from 'react';
+import { Elements, useStripe, useElements, CardElement, PaymentRequestButtonElement } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import './index.css';
+
+const stripePromise = loadStripe('your-public-key-here'); // Your Stripe public key
+
+const CheckoutForm = () => {
+  const stripe = useStripe();
+  const elements = useElements();
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!stripe || !elements) {
+      return;
+    }
+
+    const cardElement = elements.getElement(CardElement);
+
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
+      type: 'card',
+      card: cardElement,
+    });
+
+    if (error) {
+      console.error(error);
+    } else {
+      console.log('Payment Method:', paymentMethod);
+      // Process paymentMethod.id on the server
+    }
+  };
+
+  const handlePaymentRequest = async () => {
+    const paymentRequest = stripe.paymentRequest({
+      country: 'US',
+      currency: 'usd',
+      total: {
+        label: 'Total',
+        amount: 1000, // e.g. $10.00
+      },
+      requestPayerName: true,
+      requestPayerEmail: true,
+    });
+
+    const result = await paymentRequest.canMakePayment();
+
+    if (result) {
+      const elements = stripe.elements();
+      const prButton = elements.create('paymentRequestButton', {
+        paymentRequest,
+      });
+
+      prButton.mount('#payment-request-button');
+      paymentRequest.on('paymentmethod', async (event) => {
+        // Confirm payment on the server
+        const { error } = await stripe.confirmCardPayment(
+          'client-secret-from-your-server',
+          { payment_method: event.paymentMethod.id }
+        );
+
+        if (error) {
+          console.error(error);
+        } else {
+          event.complete('success');
+        }
+      });
+    }
+  };
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit} className="payment-form">
+        <div className="form-group">
+          <label htmlFor="card-element">Credit or debit card</label>
+          <CardElement id="card-element" className="card-element" />
+        </div>
+        <button type="submit" disabled={!stripe}>
+          Pay
+        </button>
+      </form>
+      <div id="payment-request-button"></div>
+    </div>
+  );
+};
+
+const Payments = () => {
+  return (
+    <Elements stripe={stripePromise}>
+      <div className="payments-container">
+        <h2>Make a Payment</h2>
+        <CheckoutForm />
+      </div>
+    </Elements>
+  );
+};
+
+export default Payments;
+```
+
+### Registration Component
+
+You can create a registration component to handle user sign-ups.
+
+```jsx
+import React, { useState } from 'react';
+import './index.css';
+
+const Registration = () => {
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Handle registration logic here
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="registration-form">
+      <div className="form-group">
+        <label htmlFor="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          value={formData.username}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <button type="submit">Register</button>
+    </form>
+  );
+};
+
+export default Registration;
+```
 
 ## Contributing
 
-If you'd like to contribute to this project, please follow these guidelines:
-
-1. Fork the project on GitHub.
-2. Create a new branch for your feature or bug fix.
-3. Make your changes and commit them with clear and concise commit messages.
-4. Push your changes to your forked repository.
-5. Open a pull request, describing the changes you've made.
+Contributions are welcome! Please open an issue or submit a pull request for any improvements or new features.
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE), which means you are free to use and modify it for your purposes. Please refer to the license file for more details.
+This project is licensed under the MIT License.
+```
 
-## Acknowledgments
-
-If you used any external resources, libraries, or tutorials during the development of this project, acknowledge and give credit to them here.
-
-Enjoy building and customizing your own e-commerce website using this project as a starting point!
-
+Make sure to replace placeholder values (like `"your-public-key-here"`) with actual values from your Stripe account or other relevant services. This `README.md` provides a comprehensive overview of the project, including setup, usage, and deployment instructions.
