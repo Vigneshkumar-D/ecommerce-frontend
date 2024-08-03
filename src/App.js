@@ -45,7 +45,6 @@ class App extends Component {
               path="/products/:id"
               component={ProductItemDetails}
             />
-            <ProtectedRoute exact path="/account/register"component={Registration}/>
             <ProtectedRoute exact path="/checkout"component={Payments}/>
             <ProtectedRoute exact path="/cart" component={Cart} />
             <Route path="/not-found" component={NotFound} />
