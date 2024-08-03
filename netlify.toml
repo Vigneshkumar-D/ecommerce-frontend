@@ -1,5 +1,0 @@
-[build]
-  command = "pnpm install && pnpm build"
-  publish = "build" 
-  environment = { NODE_VERSION = "20.13.1", NPM_VERSION = "8.15.8" }
-
