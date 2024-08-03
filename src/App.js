@@ -1,6 +1,5 @@
 import {Component} from 'react'
 import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom'
-
 import LoginForm from './components/LoginForm'
 import Home from './components/Home'
 import Products from './components/Products'
@@ -12,7 +11,6 @@ import ContextData from './context/ContextData'
 import './App.css'
 import Payments from './components/Payments'
 import Registration from './components/Registration'
-
 
 class App extends Component {
   state = {
@@ -54,7 +52,6 @@ class App extends Component {
             <Redirect to="not-found" />
           </Switch>
         </ContextData.Provider>
-
       </BrowserRouter>
     )
   }

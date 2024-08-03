@@ -23,7 +23,6 @@ const apiStatusConstants = {
   failure: 'FAILURE',
   inProgress: 'IN_PROGRESS',
 }
-
 class AllProductsSection extends Component {
   state = {
     productsList: [],
@@ -140,6 +139,11 @@ class AllProductsSection extends Component {
       </div>
     ) : (
       <div className="no-products-view">
+         <ProductsHeader
+          activeOptionId={activeOptionId}
+          sortbyOptions={sortbyOptions}
+          changeSortby={this.changeSortby}
+        />
         <img
           src="https://assets.ccbp.in/frontend/react-js/nxt-trendz/nxt-trendz-no-products-view.png"
           className="no-products-img"
