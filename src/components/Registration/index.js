@@ -33,9 +33,9 @@ const Registration = () => {
   };
 
 return (
-<div className="login-form-container">
+<div className="registration-container">
 <img
-  src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-logo-img.png"
+  src="https://res.cloudinary.com/da7ik4khq/image/upload/v1722589388/ecom2_vvvfyv.png"
   className="login-website-logo-mobile-image"
   alt="website logo"
 />
@@ -111,7 +111,7 @@ return (
             Register
           </Button>
         </Form.Item>
-      </Form>
+   </Form>
   
 </div>
 </div>

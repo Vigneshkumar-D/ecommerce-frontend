@@ -11,18 +11,49 @@
     text-align: center;
     margin-bottom: 1.5rem;
   }
+
   .form-container{
     width: 100%;
     padding-top: 20px;
     padding-bottom: 20px;
     align-self: center;
   }
-  .login-form-container {
+  .registration-container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
     width: 100%;
     margin: auto;
+  }
+
+  @media screen and (min-width: 992px) {
+    .registration-container {
+      flex-direction: row;
+      justify-content: space-around;
+    }
+  }
+
+  .login-website-logo-mobile-image {
+    width: 165px;
+    margin-top: 50px;
+    margin-bottom: 35px;
+    display: block;
+  }
+  
+  @media screen and (min-width: 992px) {
+    .login-website-logo-mobile-image {
+      display: none;
+    }
+  }
+    
+  .login-website-logo-desktop-image {
+    width: 185px;
+  }
+  
+  @media screen and (max-width: 991px) {
+    .login-website-logo-desktop-image {
+      display: none;
+    }
   }
